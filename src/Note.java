@@ -1,3 +1,5 @@
+import javax.swing.text.DateFormatter;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 
@@ -27,8 +29,8 @@ public class Note {
 
     public Note() {
     }
-    /*Getters and setters for the fields*/
 
+    /*Getters and setters for the fields*/
     public String getTitle() {
         return title;
     }
@@ -57,12 +59,23 @@ public class Note {
         System.out.println("Title: ");
         this.title = scanner.nextLine();
 
-        System.out.println("Enter the type of the note: \n");
+        // Select menu for NoteType
+        System.out.println("Select the type of the note:");
+        int optionNum = 1;
         for (NoteType type : NoteType.values()) {
-            System.out.println(type);
+            System.out.println(optionNum + ". " + type);
+            optionNum++;
         }
-        this.type = NoteType.valueOf(scanner.nextLine().toUpperCase());
+        int choice = scanner.nextInt();
+        if (choice < 1 || choice > NoteType.values().length) {
+            System.out.println("Invalid choice. Defaulting to TEXT.");
+            this.type = NoteType.TEXT;
+        } else {
+            this.type = NoteType.values()[choice - 1];
+        }
 
-        this.date = LocalDateTime.now().toString();
+        // date format is "yyyy-MM-dd HH:mm:ss"
+        this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+
 }
