@@ -1,3 +1,6 @@
+import java.util.Scanner;
+import java.time.LocalDateTime;
+
 public class Note {
 
     /*Types of notes, that can be created*/
@@ -13,6 +16,8 @@ public class Note {
     private NoteType type;
     private String date;
 
+    Scanner scanner = new Scanner(System.in);
+
     /*Constructor for creating a note*/
     public Note(String title, NoteType type, String date) {
         this.title = title;
@@ -20,6 +25,8 @@ public class Note {
         this.date = date;
     }
 
+    public Note() {
+    }
     /*Getters and setters for the fields*/
 
     public String getTitle() {
@@ -44,5 +51,18 @@ public class Note {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void createNote() {
+        System.out.println("Title: ");
+        this.title = scanner.nextLine();
+
+        System.out.println("Enter the type of the note: \n");
+        for (NoteType type : NoteType.values()) {
+            System.out.println(type);
+        }
+        this.type = NoteType.valueOf(scanner.nextLine().toUpperCase());
+
+        this.date = LocalDateTime.now().toString();
     }
 }
