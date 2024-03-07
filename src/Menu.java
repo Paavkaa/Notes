@@ -24,15 +24,13 @@ public class Menu {
                     note.createNote();
                     break;
                 case 2:
-                    System.out.println("Editing a note");
+                    note.editNote();
                     break;
                 case 3:
                     System.out.println("Deleting a note");
                     break;
                 case 4:
-                    System.out.println("Title: " + note.getTitle());
-                    System.out.println("Type: " + note.getType());
-                    System.out.println("Date: " + note.getDate());
+                    note.viewNote();
                     break;
                 case 5:
                     System.out.println("Exiting the program");

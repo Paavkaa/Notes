@@ -6,8 +6,5 @@ public class Main {
 
         System.out.println("Welcome to the Notes App!");
         menu.displayMenu();
-
     }
-
 }
-
