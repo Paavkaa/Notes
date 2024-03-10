@@ -55,9 +55,10 @@ public class NoteArray {
     }
 
     public void viewAllNotes() {
-        for (Note note : notes) {
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
             String title = note.getTitle();
-            System.out.println(title);
+            System.out.println(i + ". " + title);
         }
     }
 }
