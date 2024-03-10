@@ -3,6 +3,6 @@ public class Main {
         Menu menu = new Menu();
 
         System.out.println("Welcome to the Notes App!");
-        menu.displayMenu();
+        menu.MainMenu();
     }
 }

@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Menu {
     Scanner scanner = new Scanner(System.in);
@@ -6,16 +7,13 @@ public class Menu {
 
     NoteArray note = new NoteArray();
 
-    public void displayMenu() {
+    public void MainMenu() {
         do {
             System.out.println(
                     """
                     1. Create a new note\s
-                    2. Edit a note\s
-                    3. Delete a note\s
-                    4. View a note\s
-                    5. View all notes\s
-                    6. Exit the program
+                    2. Select a note\s
+                    3. Exit the program
                     """);
 
             System.out.println("Enter your choice: ");
@@ -26,18 +24,9 @@ public class Menu {
                     note.addNote();
                     break;
                 case 2:
-                    note.editNote();
+                    note.selectNote();
                     break;
                 case 3:
-                    note.deleteNote();
-                    break;
-                case 4:
-                    note.viewNote();
-                    break;
-                case 5:
-                    note.viewAllNotes();
-                    break;
-                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -46,6 +35,22 @@ public class Menu {
 
             makeSpace();
         } while (true);
+    }
+
+    public void NoteMenu(UUID id) {
+
+        switch (choice) {
+            case 2:
+                note.editNote();
+                break;
+            case 3:
+                note.deleteNote();
+                break;
+            case 4:
+                note.viewNote();
+                break;
+        }
+
     }
 
     private static void makeSpace() {

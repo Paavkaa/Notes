@@ -54,11 +54,15 @@ public class NoteArray {
         System.out.println("Note with the title " + title + " not found.");
     }
 
-    public void viewAllNotes() {
+    public void selectNote() {
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             String title = note.getTitle();
             System.out.println(i + ". " + title);
         }
+
+        System.out.println("Enter the number of the note you want to view: ");
+        int index = scanner.nextInt();
+        notes.get(index).viewNote();
     }
 }
