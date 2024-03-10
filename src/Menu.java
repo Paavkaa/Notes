@@ -15,7 +15,8 @@ public class Menu {
                     2. Edit a note\s
                     3. Delete a note\s
                     4. View a note\s
-                    5. Exit the program
+                    5. View all notes\s
+                    6. Exit the program
                     """);
 
             System.out.println("Enter your choice: ");
@@ -35,6 +36,9 @@ public class Menu {
                     note.viewNote();
                     break;
                 case 5:
+                    note.viewAllNotes();
+                    break;
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -46,7 +50,7 @@ public class Menu {
     }
 
     private static void makeSpace() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             System.out.println();
         }
     }

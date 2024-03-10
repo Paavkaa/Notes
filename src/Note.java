@@ -1,8 +1,11 @@
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Note extends NoteArray {
+
+    UUID id;
 
     /*Types of notes, that can be created*/
     public enum NoteType {
@@ -55,6 +58,7 @@ public class Note extends NoteArray {
     }
 
     public void createNote() {
+        id = UUID.randomUUID();
         System.out.println("Title: ");
         this.title = scanner.nextLine();
         selectType();
@@ -64,7 +68,8 @@ public class Note extends NoteArray {
 
     public void viewNote() {
         System.out.println(
-                "Title: " + title
+                "UUID: " + id
+                + "\nTitle: " + title
                 + "\nType: " + type
                 + "\nDate: " + date);
     }

@@ -53,4 +53,11 @@ public class NoteArray {
 
         System.out.println("Note with the title " + title + " not found.");
     }
+
+    public void viewAllNotes() {
+        for (Note note : notes) {
+            String title = note.getTitle();
+            System.out.println(title);
+        }
+    }
 }
