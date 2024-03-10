@@ -1,9 +1,11 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
     Scanner scanner = new Scanner(System.in);
     int choice;
-    Note note = new Note();
+
+    NoteArray note = new NoteArray();
 
     public void displayMenu() {
         do {
@@ -21,27 +23,26 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    note.createNote();
+                    note.addNote();
                     break;
                 case 2:
                     note.editNote();
                     break;
                 case 3:
-                    System.out.println("Deleting a note");
+                    note.deleteNote();
                     break;
                 case 4:
                     note.viewNote();
                     break;
                 case 5:
-                    System.out.println("Exiting the program");
-                    break;
+                    return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
 
             makeSpace();
-        } while (choice != 5);
+        } while (true);
     }
 
     private static void makeSpace() {

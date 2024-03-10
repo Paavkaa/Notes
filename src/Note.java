@@ -1,9 +1,8 @@
-import java.sql.SQLOutput;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 
-public class Note {
+public class Note extends NoteArray {
 
     /*Types of notes, that can be created*/
     public enum NoteType {
@@ -116,4 +115,5 @@ public class Note {
             this.type = NoteType.values()[choice - 1];
         }
     }
+
 }
