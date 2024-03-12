@@ -24,6 +24,7 @@ public class Note extends NoteArray {
 
     /*Constructor for creating a note*/
     public Note(String title, NoteType type, String date) {
+        this.id = UUID.randomUUID();
         this.title = title;
         this.type = type;
         this.date = date;
@@ -39,6 +40,14 @@ public class Note extends NoteArray {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public NoteType getType() {
@@ -66,7 +75,7 @@ public class Note extends NoteArray {
         this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void viewNote() {
+    public void viewNote(UUID id) {
         System.out.println(
                 "UUID: " + id
                 + "\nTitle: " + title

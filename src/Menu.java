@@ -24,7 +24,7 @@ public class Menu {
                     note.addNote();
                     break;
                 case 2:
-                    note.selectNote();
+                    NoteMenu(note.selectNote());
                     break;
                 case 3:
                     return;
@@ -38,18 +38,40 @@ public class Menu {
     }
 
     public void NoteMenu(UUID id) {
+        do {
+            if (id == null) {
+                System.out.println("No notes found.");
+                return;
+            }
 
-        switch (choice) {
-            case 2:
-                note.editNote();
-                break;
-            case 3:
-                note.deleteNote();
-                break;
-            case 4:
-                note.viewNote();
-                break;
-        }
+            System.out.println(
+                    """
+                    1. Edit note\s
+                    2. Delete note\s
+                    3. View note\s
+                    4. Return to main menu
+                    """);
+
+            System.out.println("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    note.editNote(id);
+                    break;
+                case 2:
+                    note.deleteNote(id);
+                    return;
+                case 3:
+                    note.viewNote(id);
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
 
     }
 
