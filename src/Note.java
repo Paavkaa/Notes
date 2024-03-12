@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Note extends NoteArray {
+public class Note {
 
     UUID id;
 
