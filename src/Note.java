@@ -23,10 +23,8 @@ public class Note {
     // Values for TEXT
     private String text;
 
-    // Values for LIST
     private String[] list;
 
-    // Values for TODO
     Todo todo = new Todo();
 
     Scanner scanner = new Scanner(System.in);
@@ -104,8 +102,7 @@ public class Note {
                 this.text = scanner.nextLine();
                 break;
             case LIST:
-                //there will be creating of list note
-                System.out.println("Feature is not implemented yet");
+                createList();
                 break;
             case TODO:
                 todo.createTodo();
@@ -115,10 +112,20 @@ public class Note {
         this.creationDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+    public void createList() {
+        while (true) {
+            todo.createListItem();
+            System.out.println("Do you want to add another item? (y/N) ");
+            String choice = scanner.nextLine();
+            if (choice.equalsIgnoreCase("n")) {
+                break; // Exit the loop if the user enters 'N'
+            }
+        }
+    }
+
     public void viewNote(UUID id) {
         System.out.println(
-                "UUID: " + id
-                + "\nTitle: " + title
+                "Title: " + title
                 + "\nType: " + type
                 + "\nDate: " + creationDate);
 
@@ -134,6 +141,17 @@ public class Note {
             case TODO:
                 todo.viewTodo();
                 break;
+        }
+    }
+
+    public void viewList(UUID id) {
+        System.out.println(
+                "Title: " + title
+                + "\nType: " + type
+                + "\nDate: " + creationDate);
+
+        for (String item : list) {
+            System.out.println(item);
         }
     }
 

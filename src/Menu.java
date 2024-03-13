@@ -100,8 +100,8 @@ public class Menu {
             System.out.println(
                     """
                     1. Edit note\s
-                    2. Delete note\s
-                    3. View note\s
+                    2. View note\s
+                    3. Delete note\s
                     4. Return to main menu
                     """);
 
@@ -114,11 +114,11 @@ public class Menu {
                     editNote(id);
                     break;
                 case 2:
-                    deleteNote(id);
-                    return; // Return to main menu after deletion
-                case 3:
                     viewNote(id);
                     break;
+                case 3:
+                    deleteNote(id);
+                    return; // Return to main menu after deletion
                 case 4:
                     return; // Return to main menu
                 default:
