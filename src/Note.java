@@ -10,7 +10,7 @@ public class Note {
     /*Types of notes, that can be created*/
     public enum NoteType {
         TEXT, // Simple text note
-        LIST, // List of items that can be checked and unchecked
+        LIST, // List of TODOs
         TODO // Note that can be marked as done, has a deadline and priority, can be added description
     }
 
@@ -18,7 +18,16 @@ public class Note {
     /*General values for all note types*/
     private String title;
     private NoteType type;
-    private String date;
+    private String creationDate;
+
+    // Values for TEXT
+    private String text;
+
+    // Values for LIST
+    private String[] list;
+
+    // Values for TODO
+    Todo todo = new Todo();
 
     Scanner scanner = new Scanner(System.in);
 
@@ -27,7 +36,7 @@ public class Note {
         this.id = UUID.randomUUID();
         this.title = title;
         this.type = type;
-        this.date = date;
+        this.creationDate = date;
     }
 
     public Note() {
@@ -58,21 +67,52 @@ public class Note {
         this.type = type;
     }
 
-    public String getDate() {
-        return date;
+    public String getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String[] getList() {
+        return list;
+    }
+
+    public void setList(String[] list) {
+        this.list = list;
     }
 
     public void createNote() {
         id = UUID.randomUUID();
         System.out.println("Title: ");
         this.title = scanner.nextLine();
-        selectType();
+        this.type = selectType();
+
+        switch (type)
+        {
+            case TEXT:
+                System.out.println("Text: ");
+                this.text = scanner.nextLine();
+                break;
+            case LIST:
+                //there will be creating of list note
+                System.out.println("Feature is not implemented yet");
+                break;
+            case TODO:
+                todo.createTodo();
+                break;
+        }
         // date format is "yyyy-MM-dd HH:mm:ss"
-        this.date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.creationDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void viewNote(UUID id) {
@@ -80,7 +120,21 @@ public class Note {
                 "UUID: " + id
                 + "\nTitle: " + title
                 + "\nType: " + type
-                + "\nDate: " + date);
+                + "\nDate: " + creationDate);
+
+        switch (type)
+        {
+            case TEXT:
+                System.out.println("Text: " + text);
+                break;
+            case LIST:
+                //there will be creating of list note
+                System.out.println("Feature is not implemented yet");
+                break;
+            case TODO:
+                todo.viewTodo();
+                break;
+        }
     }
 
     public void editNote() {
@@ -114,20 +168,25 @@ public class Note {
         }
     }
 
-    public void selectType() {
+    public NoteType selectType() {
         System.out.println("Select the type of the note:");
         int optionNum = 1;
         for (NoteType type : NoteType.values()) {
             System.out.println(optionNum + ". " + type);
             optionNum++;
         }
+
         int choice = scanner.nextInt();
-        if (choice < 1 || choice > NoteType.values().length) {
-            System.out.println("Invalid choice. Defaulting to TEXT.");
-            this.type = NoteType.TEXT;
-        } else {
-            this.type = NoteType.values()[choice - 1];
+        scanner.nextLine(); // Consume the newline character
+
+        try {
+            if (choice < 1 || choice > NoteType.values().length) {
+                throw new IllegalArgumentException("Invalid choice."); // Use a more specific exception
+            }
+            return NoteType.values()[choice - 1];
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage() + " Defaulting to TEXT.");
+            return NoteType.TEXT;
         }
     }
-
 }
