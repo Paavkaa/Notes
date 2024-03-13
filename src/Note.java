@@ -5,39 +5,37 @@ import java.util.UUID;
 
 public class Note {
 
-    UUID id;
+    // Unique identifier for the note
+    private UUID id;
 
-    /*Types of notes, that can be created*/
+    // Scanner for user input
+    private Scanner scanner = new Scanner(System.in);
+
+    // Types of notes that can be created
     public enum NoteType {
         TEXT, // Simple text note
-        LIST, // List of TODOs
-        TODO // Note that can be marked as done, has a deadline and priority, can be added description
+        LIST, // List of items, such as TODOs
+        TODO  // Note with a status, deadline, priority, and optional description
     }
 
+    // General properties for all note types
+    private String title;       // Title of the note
+    private NoteType type;      // Type of the note
+    private String creationDate;// Date when the note was created
 
-    /*General values for all note types*/
-    private String title;
-    private NoteType type;
-    private String creationDate;
+    // Properties for specific note types
+    private String text;       // Content for TEXT note type
+    private String[] list;     // List of items for LIST note type
+    private Todo todo;         // TODO object for TODO note type
 
-    // Values for TEXT
-    private String text;
 
-    private String[] list;
-
-    Todo todo = new Todo();
-
-    Scanner scanner = new Scanner(System.in);
-
-    /*Constructor for creating a note*/
-    public Note(String title, NoteType type, String date) {
-        this.id = UUID.randomUUID();
-        this.title = title;
-        this.type = type;
-        this.creationDate = date;
-    }
-
+    /**
+     * Default constructor for creating an instance of a note without initializing fields.
+     * Can be used to create a note object and set properties later.
+     */
     public Note() {
+        // This constructor intentionally left blank.
+        // Fields can be set using setter methods or direct access.
     }
 
     /*Getters and setters for the fields*/
@@ -89,72 +87,106 @@ public class Note {
         this.list = list;
     }
 
+    /**
+     * Interactively creates a note by prompting the user for input.
+     * It assigns a unique identifier, sets the title, note type, and content based on the note type.
+     * The creation date is automatically set to the current date and time in the specified format.
+     */
     public void createNote() {
-        id = UUID.randomUUID();
+        id = UUID.randomUUID(); // Assign a new unique identifier to the note
         System.out.println("Title: ");
-        this.title = scanner.nextLine();
-        this.type = selectType();
+        this.title = scanner.nextLine(); // Set the title of the note from user input
+        this.type = selectType(); // Set the type of the note based on user selection
 
-        switch (type)
-        {
+        // Set the content of the note depending on its type
+        switch (type) {
             case TEXT:
                 System.out.println("Text: ");
-                this.text = scanner.nextLine();
+                this.text = scanner.nextLine(); // Set the text content for TEXT type note
                 break;
             case LIST:
-                createList();
+                createList(); // Delegate to createList method for LIST type note
                 break;
             case TODO:
-                todo.createTodo();
+                todo.createTodo(); // Delegate to Todo object's createTodo method for TODO type note
                 break;
         }
-        // date format is "yyyy-MM-dd HH:mm:ss"
+
+        // Set the creation date to the current date and time in the format "yyyy-MM-dd HH:mm:ss"
         this.creationDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+    /**
+     * Interactively creates a list of items for the note by repeatedly prompting the user.
+     * The user is asked after each item if they wish to continue adding more items.
+     * The loop terminates when the user indicates they do not want to add another item.
+     */
     public void createList() {
         while (true) {
-            todo.createListItem();
+            todo.createListItem(); // Call method to add a new item to the list
             System.out.println("Do you want to add another item? (y/N) ");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("n")) {
-                break; // Exit the loop if the user enters 'N'
+                break; // Exit the loop if the user enters 'N' or 'n'
             }
         }
     }
 
+    /**
+     * Displays the properties and content of the note identified by the given UUID.
+     * The method shows the note's title, type, and creation date, followed by the specific content
+     * based on the note's type. If a feature for a specific note type is not yet implemented,
+     * it informs the user accordingly.
+     *
+     * @param id UUID of the note to be viewed. Note: the parameter is not currently used in the method.
+     */
     public void viewNote(UUID id) {
+        // Display the general properties of the note
         System.out.println(
                 "Title: " + title
-                + "\nType: " + type
-                + "\nDate: " + creationDate);
+                        + "\nType: " + type
+                        + "\nDate: " + creationDate);
 
-        switch (type)
-        {
+        // Display the content based on the note's type
+        switch (type) {
             case TEXT:
-                System.out.println("Text: " + text);
+                System.out.println("Text: " + text); // Show the text content for TEXT type note
                 break;
             case LIST:
-                //there will be creating of list note
-                System.out.println("Feature is not implemented yet");
+                // Placeholder for future implementation of LIST type note viewing
+                System.out.println("Feature is not implemented yet"); // Inform that the feature is not yet available
                 break;
             case TODO:
-                todo.viewTodo();
+                todo.viewTodo(); // Delegate to Todo object's viewTodo method for TODO type note
                 break;
         }
     }
 
+    /**
+     * Displays the details and items of a list-type note identified by the given UUID.
+     * The method outputs the note's title, type, and creation date, followed by each item in the list.
+     * Assumes that the note is of the LIST type and that the 'list' array contains the items to display.
+     *
+     * @param id UUID of the list-type note to be viewed. Note: the parameter is not currently used in the method.
+     */
     public void viewList(UUID id) {
+        // Display the general properties of the list-type note
         System.out.println(
                 "Title: " + title
-                + "\nType: " + type
-                + "\nDate: " + creationDate);
+                        + "\nType: " + type
+                        + "\nDate: " + creationDate);
 
+        // Iterate over and display each item in the list
         for (String item : list) {
-            System.out.println(item);
+            System.out.println(item); // Print each list item on a new line
         }
     }
 
+    /**
+     * Provides an interactive menu for the user to edit properties of the note.
+     * The user can choose to edit the title or the type of the note, or exit the edit mode.
+     * Invalid choices prompt the user to try again.
+     */
     public void editNote() {
         System.out.println("What do you want to edit?" +
                 "\n1. Title" +
@@ -163,29 +195,35 @@ public class Note {
                 "\nEnter your choice: ");
 
         int choice = scanner.nextInt();
-        // clear the buffer
-        scanner.nextLine();
+        scanner.nextLine(); // Clear the buffer to handle next line input
 
         switch (choice) {
             case 1:
                 System.out.println("Enter new title: ");
-                this.title = scanner.nextLine();
+                this.title = scanner.nextLine(); // Update the title of the note
                 break;
 
             case 2:
-                selectType();
+                this.type = selectType(); // Update the type of the note
                 break;
 
             case 3:
-                System.out.println("Exiting edit mode.");
+                System.out.println("Exiting edit mode."); // Exit the edit menu
                 break;
 
             default:
-                System.out.println("Invalid choice. Please try again.");
+                System.out.println("Invalid choice. Please try again."); // Prompt for a valid choice
                 break;
         }
     }
 
+    /**
+     * Presents a menu to the user for selecting the type of the note from the available NoteType enum values.
+     * The user inputs a number corresponding to the desired note type. If the choice is invalid,
+     * an exception is thrown and caught within the method, and the default note type TEXT is returned.
+     *
+     * @return The selected NoteType, or TEXT if an invalid choice is made.
+     */
     public NoteType selectType() {
         System.out.println("Select the type of the note:");
         int optionNum = 1;
@@ -195,16 +233,16 @@ public class Note {
         }
 
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        scanner.nextLine(); // Consume the newline character to prepare for the next input
 
         try {
             if (choice < 1 || choice > NoteType.values().length) {
-                throw new IllegalArgumentException("Invalid choice."); // Use a more specific exception
+                throw new IllegalArgumentException("Invalid choice."); // Validate user input
             }
-            return NoteType.values()[choice - 1];
+            return NoteType.values()[choice - 1]; // Return the selected note type
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage() + " Defaulting to TEXT.");
-            return NoteType.TEXT;
+            System.out.println(e.getMessage() + " Defaulting to TEXT."); // Handle invalid choice
+            return NoteType.TEXT; // Return default note type
         }
     }
 }

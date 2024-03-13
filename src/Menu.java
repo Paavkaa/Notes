@@ -8,6 +8,8 @@ public class Menu {
 
     public void MainMenu() {
         do {
+
+            //Multi-line text for the menu switch
             System.out.println(
                     """
                     1. Create a new note\s
@@ -21,12 +23,12 @@ public class Menu {
 
             switch (choice) {
                 case 1:
-                    addNote();
+                    addNote(); // Add a new note
                     break;
                 case 2:
-                    UUID id = selectNote();
+                    UUID id = selectNote(); // Select a note
                     if (id != null) {
-                        NoteMenu(id);
+                        NoteMenu(id); // Open the note menu for selected note and it is checked by ID
                     }
                     break;
                 case 3:
@@ -41,12 +43,26 @@ public class Menu {
         } while (true);
     }
 
+    /**
+     * Adds a new note to the collection.
+     * This method instantiates a new Note object, prompts the user to create the note's content,
+     * and then appends the new note to the 'notes' ArrayList.
+     */
     private void addNote() {
         Note note = new Note();
         note.createNote();
         notes.add(note);
     }
 
+    /**
+     * Prompts the user to select a note from the list of existing notes.
+     * This method displays all notes with their respective titles and indices if the list is not empty.
+     * The user is then asked to enter the index of the note they wish to select. If the provided index
+     * is valid, the method returns the UUID of the selected note. If there are no notes or the index
+     * is invalid, the method informs the user and returns null.
+     *
+     * @return UUID of the selected note or null if no valid selection is made
+     */
     private UUID selectNote() {
         if (notes.isEmpty()) {
             System.out.println("No notes found.");
@@ -71,6 +87,17 @@ public class Menu {
         return selectedNote.getId();
     }
 
+
+    /**
+     * Edits the contents of a note identified by its UUID.
+     *
+     * This method iterates through the list of notes to find the one matching the provided UUID.
+     * If a note with the matching UUID is found, its 'editNote' method is called, allowing for the
+     * modification of the note's content. If no note with the specified UUID exists, an error message
+     * is displayed to the user.
+     *
+     * @param id UUID of the note to be edited
+     */
     private void editNote(UUID id) {
         for (Note note : notes) {
             if (note.getId().equals(id)) {
@@ -81,10 +108,28 @@ public class Menu {
         System.out.println("Note with the id " + id + " not found.");
     }
 
+    /**
+     * Removes a note from the collection based on its UUID.
+     * This method utilizes the 'removeIf' method from the Collection framework to find and remove
+     * the note whose UUID matches the given 'id'. If no matching note is found, the collection remains
+     * unchanged. There is no return value or confirmation; the note is simply removed if it exists.
+     *
+     * @param id UUID of the note to be deleted
+     */
     private void deleteNote(UUID id) {
         notes.removeIf(note -> note.getId().equals(id));
     }
 
+
+    /**
+     * Displays the content of a specific note identified by its UUID.
+     * Iterates through the list of notes to find one with a matching UUID. When found, the note's
+     * 'viewNote' method is called, which is responsible for displaying the note's content. If no note
+     * with the provided UUID can be located, a message is displayed to inform the user of the
+     * unsuccessful search.
+     *
+     * @param id UUID of the note to be viewed
+     */
     private void viewNote(UUID id) {
         for (Note note : notes) {
             if (note.getId().equals(id)) {
@@ -95,8 +140,19 @@ public class Menu {
         System.out.println("Note with the id " + id + " not found.");
     }
 
+    /**
+     * Displays the note management menu and processes user actions for a specific note.
+     *
+     * This method presents a menu with options to edit, view, delete a note, or return to the main menu.
+     * It reads the user's choice and performs the corresponding action on the note identified by the UUID 'id'.
+     * If the user chooses to delete the note or return to the main menu, the method exits after performing
+     * the action. If an invalid choice is entered, an error message is displayed, and the menu is presented again.
+     *
+     * @param id UUID of the note for which the menu actions will be applied
+     */
     public void NoteMenu(UUID id) {
         do {
+
             System.out.println(
                     """
                     1. Edit note\s
