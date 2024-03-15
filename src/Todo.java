@@ -5,6 +5,9 @@ public class Todo {
     // Scanner object for reading user input from the console
     Scanner scanner = new Scanner(System.in);
 
+    // InputChecker object for validating user input
+    private final InputChecker inputChecker = new InputChecker();
+
     // Unique identifier for a Todo item
     UUID idTodo;
 
@@ -52,7 +55,7 @@ public class Todo {
      * The completion status of the item is set to false, indicating that it is not yet done.
      */
     public void createListItem() {
-        idTodo = UUID.randomUUID(); // Generate a unique identifier for the list item
+        this.idTodo = UUID.randomUUID(); // Generate a unique identifier for the list item
 
         System.out.println("Enter the description for the list item:");
         String userDescription = scanner.nextLine(); // Prompt the user for the list item description
@@ -86,8 +89,7 @@ public class Todo {
         for (int i = 0; i < PriorityScale.values().length; i++) {
             System.out.println((i + 1) + ". " + PriorityScale.values()[i]);
         }
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character to prepare for next input
+        int choice = inputChecker.getIntegerChoice(); // Prompt the user for a choice
 
         // Validate the user's choice and set the priority or default to NONE
         if (choice < 1 || choice > PriorityScale.values().length) {

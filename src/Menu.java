@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
     private final ArrayList<Note> notes = new ArrayList<>();
+    private final InputChecker inputChecker = new InputChecker();
 
     public void MainMenu() {
         do {
@@ -17,9 +19,7 @@ public class Menu {
                     3. Exit the program
                     """);
 
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int choice = inputChecker.getIntegerChoice();
 
             switch (choice) {
                 case 1:
@@ -74,9 +74,18 @@ public class Menu {
             System.out.println((i + 1) + ". " + note.getTitle());
         }
 
-        System.out.print("Enter the index of the note you want to select: ");
-        int index = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        int index = 0;
+
+        try {
+            index = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); // Consume the invalid input
+            return null; // Or ask again using a loop
+        } finally {
+            scanner.nextLine(); // Consume the newline character whether exception occurred or not
+        }
+
 
         if (index < 1 || index > notes.size()) {
             System.out.println("Invalid index. Please select a valid note index.");
@@ -161,9 +170,8 @@ public class Menu {
                     4. Return to main menu
                     """);
 
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+                int choice = inputChecker.getIntegerChoice();
+// Proceed with the rest of your code using the 'choice' variable
 
             switch (choice) {
                 case 1:

@@ -1,4 +1,5 @@
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -9,7 +10,10 @@ public class Note {
     private UUID id;
 
     // Scanner for user input
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
+
+    // InputChecker object for validating user input
+    private final InputChecker inputChecker = new InputChecker();
 
     // Types of notes that can be created
     public enum NoteType {
@@ -26,7 +30,7 @@ public class Note {
     // Properties for specific note types
     private String text;       // Content for TEXT note type
     private String[] list;     // List of items for LIST note type
-    private Todo todo;         // TODO object for TODO note type
+    public Todo todo;         // TODO object for TODO note type
 
 
     /**
@@ -122,6 +126,10 @@ public class Note {
      * The loop terminates when the user indicates they do not want to add another item.
      */
     public void createList() {
+        if (this.todo == null) {
+            this.todo = new Todo();
+        }
+
         while (true) {
             todo.createListItem(); // Call method to add a new item to the list
             System.out.println("Do you want to add another item? (y/N) ");
@@ -194,8 +202,7 @@ public class Note {
                 "\n3. Exit" +
                 "\nEnter your choice: ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Clear the buffer to handle next line input
+        int choice = inputChecker.getIntegerChoice(); // Get the user's choice as an integer
 
         switch (choice) {
             case 1:
@@ -231,9 +238,7 @@ public class Note {
             System.out.println(optionNum + ". " + type);
             optionNum++;
         }
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character to prepare for the next input
+        int choice = inputChecker.getIntegerChoice(); // Get the user's choice as an integer
 
         try {
             if (choice < 1 || choice > NoteType.values().length) {
