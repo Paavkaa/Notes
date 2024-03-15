@@ -3,11 +3,23 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class Menu {
-    private final Scanner scanner = new Scanner(System.in);
-    private final ArrayList<Note> notes = new ArrayList<>();
-    private final InputChecker inputChecker = new InputChecker();
 
+/**
+ * The Menu class provides an interactive command-line interface for managing a collection of notes.
+ * It allows users to create new notes, select existing notes for viewing or editing, and delete notes.
+ * The class supports different types of notes including text and todo notes, each with their own specific menu.
+ */
+public class Menu {
+    private final Scanner scanner = new Scanner(System.in); // Scanner for reading user input
+    private final ArrayList<Note> notes = new ArrayList<>(); // List to store all notes
+    private final InputChecker inputChecker = new InputChecker(); // Helper for checking and getting valid input
+
+
+    /**
+     * Displays the main menu and handles user interaction.
+     * Users can choose to create a note, select an existing note, or exit the program.
+     * The menu is displayed in a loop until the user chooses to exit.
+     */
     public void MainMenu() {
         do {
 
@@ -198,9 +210,16 @@ public class Menu {
         } while (true);
     }
 
+    /**
+     * Displays a menu specific to todo-type notes and handles user interactions.
+     * Users can choose to edit, view, mark as done, delete the selected todo note, or return to the main menu.
+     * The menu is displayed in a loop until the user chooses to return to the main menu.
+     *
+     * @param id UUID of the selected todo note for which the menu actions will be applied.
+     */
     public void todoMenu(UUID id) {
         do {
-
+            // Display the todo note menu options
             System.out.println(
                     """
                     1. Edit note\s
@@ -210,25 +229,42 @@ public class Menu {
                     5. Return to main menu
                     """);
 
+            // Get the user's menu choice
             int choice = inputChecker.getIntegerChoice();
-// Proceed with the rest of your code using the 'choice' variable
 
+            // Handle the user's menu choice
             switch (choice) {
                 case 1:
-                    editNote(id);
+                    editNote(id); // Edit the selected todo note
                     break;
                 case 2:
-                    viewNote(id);
+                    viewNote(id); // View the selected todo note
                     break;
                 case 3:
+                    Note selectedNote = notes
+                            .stream()
+                            .filter(n -> n.getId().equals(id))
+                            .findFirst().orElse(null);
 
+                    if (selectedNote != null) {
+                        if (selectedNote.getType() == Note.NoteType.TODO) {
+                            selectedNote.todo.checked(); // Mark the selected todo note as done
+                        } else if (selectedNote.getType() == Note.NoteType.LIST) {
+                            selectedNote.viewList(id);
+
+                            System.out.println("Enter the item number to mark as done: ");
+                            int itemNumber = inputChecker.getIntegerChoice();
+                            selectedNote.list.get(itemNumber - 1).checked();
+                        }
+                    }
+                    break;
                 case 4:
-                    deleteNote(id);
-                    return; // Return to main menu
+                    deleteNote(id); // Delete the selected todo note
+                    return; // Return to the main menu after deletion
                 case 5:
-                    return; // Return to main menu
+                    return; // Return to the main menu
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid choice. Please try again."); // Handle invalid choices
                     break;
             }
         } while (true);

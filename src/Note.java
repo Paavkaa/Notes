@@ -1,6 +1,5 @@
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -30,7 +29,7 @@ public class Note {
 
     // Properties for specific note types
     private String text;       // Content for TEXT note type
-    private ArrayList<Todo> list; // List to store items
+    final ArrayList<Todo> list; // List to store items
     public Todo todo;         // TODO object for TODO note type
 
 
@@ -138,12 +137,16 @@ public class Note {
      * Displays the details and items of a list-type note identified by the given UUID.
      * The method outputs the note's title, type, and creation date, followed by each item in the list.
      * Assumes that the note is of the LIST type and that the 'list' array contains the items to display.
+     * Displays the index number and details of each item in the list.
      *
      * @param id UUID of the list-type note to be viewed. Note: the parameter is not currently used in the method.
      */
     public void viewList(UUID id) {
+        int index = 1; // Start indexing at 1 for user-friendly numbering
         for (Todo todo : list) {
+            System.out.println("Item #" + index);
             todo.viewListItem(); // Call viewListItem on each Todo object
+            index++; // Increment index for the next item
         }
     }
 
@@ -153,11 +156,12 @@ public class Note {
      * Invalid choices prompt the user to try again.
      */
     public void editNote() {
-        System.out.println("What do you want to edit?" +
-                "\n1. Title" +
-                "\n2. Type" +
-                "\n3. Exit" +
-                "\nEnter your choice: ");
+        System.out.println("""
+                What do you want to edit?
+                1. Title
+                2. Type
+                3. Exit
+                Enter your choice:\s""");
 
         int choice = inputChecker.getIntegerChoice(); // Get the user's choice as an integer
 
