@@ -109,27 +109,27 @@ public class Todo {
         System.out.println(
                 "Deadline: " + deadline
                         + "\nPriority: " + priority
-                        + "\nDescription: " + description
-                        + "\nDone: " + (done ? "Yes" : "No")); // Display a user-friendly completion status
-
-        // Prompt the user to change the completion status
-        System.out.println("Do you want to mark this todo as done? (y/N)");
-        String choice = scanner.nextLine();
-        if (choice.equalsIgnoreCase("y")) {
-            done = true; // Update the completion status if the user chooses 'y' or 'Y'
-        }
+                        + "\nDescription: " + description);
+        checked(); // Prompt the user to mark the Todo item as done
     }
 
     /**
      * Displays the description and completion status of a list item.
      * After presenting the details, it prompts the user to mark the item as done if desired.
      */
-    public void viewListItem() {
+    public void viewListItem(String item) {
         // Display the list item's description and completion status
-        System.out.println(
-                "Description: " + description
-                        + "\nDone: " + (done ? "Yes" : "No")); // Display a user-friendly completion status
+        System.out.println("Description: " + description);
+        checked(); // Prompt the user to mark the list item as done
+    }
 
+    /**
+     * Prompts the user to mark a todo item as completed.
+     * The method asks the user to confirm if the todo item should be marked as done.
+     * If the user inputs 'y' or 'Y', the item's completion status is updated to true.
+     */
+    public void checked() {
+        System.out.println("Do you want to mark this todo as done? (y/N)");
         // Prompt the user to change the completion status to done
         System.out.println("Do you want to mark this item as done? (y/N)");
         String choice = scanner.nextLine();

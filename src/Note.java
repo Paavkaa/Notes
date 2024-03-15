@@ -1,4 +1,5 @@
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class Note {
 
     // Properties for specific note types
     private String text;       // Content for TEXT note type
-    private String[] list;     // List of items for LIST note type
+    private ArrayList<String> list; // List to store items
     public Todo todo;         // TODO object for TODO note type
 
 
@@ -47,48 +48,8 @@ public class Note {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public NoteType getType() {
-        return type;
-    }
-
-    public void setType(NoteType type) {
-        this.type = type;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String[] getList() {
-        return list;
-    }
-
-    public void setList(String[] list) {
-        this.list = list;
     }
 
     /**
@@ -132,7 +93,7 @@ public class Note {
 
         while (true) {
             todo.createListItem(); // Call method to add a new item to the list
-            System.out.println("Do you want to add another item? (y/N) ");
+            System.out.println("Do you want to add another item? (Y/n) ");
             String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("n")) {
                 break; // Exit the loop if the user enters 'N' or 'n'
@@ -161,8 +122,7 @@ public class Note {
                 System.out.println("Text: " + text); // Show the text content for TEXT type note
                 break;
             case LIST:
-                // Placeholder for future implementation of LIST type note viewing
-                System.out.println("Feature is not implemented yet"); // Inform that the feature is not yet available
+                viewList(id); // Delegate to viewList method for LIST type note
                 break;
             case TODO:
                 todo.viewTodo(); // Delegate to Todo object's viewTodo method for TODO type note
@@ -178,16 +138,7 @@ public class Note {
      * @param id UUID of the list-type note to be viewed. Note: the parameter is not currently used in the method.
      */
     public void viewList(UUID id) {
-        // Display the general properties of the list-type note
-        System.out.println(
-                "Title: " + title
-                        + "\nType: " + type
-                        + "\nDate: " + creationDate);
 
-        // Iterate over and display each item in the list
-        for (String item : list) {
-            System.out.println(item); // Print each list item on a new line
-        }
     }
 
     /**

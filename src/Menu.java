@@ -74,7 +74,7 @@ public class Menu {
             System.out.println((i + 1) + ". " + note.getTitle());
         }
 
-        int index = 0;
+        int index;
 
         try {
             index = scanner.nextInt();
@@ -99,7 +99,6 @@ public class Menu {
 
     /**
      * Edits the contents of a note identified by its UUID.
-     *
      * This method iterates through the list of notes to find the one matching the provided UUID.
      * If a note with the matching UUID is found, its 'editNote' method is called, allowing for the
      * modification of the note's content. If no note with the specified UUID exists, an error message
@@ -151,7 +150,6 @@ public class Menu {
 
     /**
      * Displays the note management menu and processes user actions for a specific note.
-     *
      * This method presents a menu with options to edit, view, delete a note, or return to the main menu.
      * It reads the user's choice and performs the corresponding action on the note identified by the UUID 'id'.
      * If the user chooses to delete the note or return to the main menu, the method exits after performing
