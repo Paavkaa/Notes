@@ -1,4 +1,5 @@
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -9,7 +10,10 @@ public class Note {
     private UUID id;
 
     // Scanner for user input
-    private Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
+
+    // InputChecker object for validating user input
+    private final InputChecker inputChecker = new InputChecker();
 
     // Types of notes that can be created
     public enum NoteType {
@@ -25,8 +29,8 @@ public class Note {
 
     // Properties for specific note types
     private String text;       // Content for TEXT note type
-    private String[] list;     // List of items for LIST note type
-    private Todo todo;         // TODO object for TODO note type
+    final ArrayList<Todo> list; // List to store items
+    public Todo todo;         // TODO object for TODO note type
 
 
     /**
@@ -34,8 +38,8 @@ public class Note {
      * Can be used to create a note object and set properties later.
      */
     public Note() {
-        // This constructor intentionally left blank.
-        // Fields can be set using setter methods or direct access.
+        this.list = new ArrayList<>(); // Initialize the ArrayList
+        this.todo = new Todo(); // Initialize the Todo object
     }
 
     /*Getters and setters for the fields*/
@@ -43,48 +47,12 @@ public class Note {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public UUID getId() {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public NoteType getType() {
         return type;
-    }
-
-    public void setType(NoteType type) {
-        this.type = type;
-    }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String[] getList() {
-        return list;
-    }
-
-    public void setList(String[] list) {
-        this.list = list;
     }
 
     /**
@@ -123,11 +91,15 @@ public class Note {
      */
     public void createList() {
         while (true) {
-            todo.createListItem(); // Call method to add a new item to the list
-            System.out.println("Do you want to add another item? (y/N) ");
-            String choice = scanner.nextLine();
+            Todo listItem = new Todo(); // Create a new Todo object for the list item
+            listItem.createListItem(); // Prompt the user to create the list item
+            list.add(listItem); // Add the list item to the ArrayList
+
+            System.out.println("Do you want to add another item? (Y/n)");
+            String choice = scanner.nextLine(); // Prompt the user to continue or exit the loop
+
             if (choice.equalsIgnoreCase("n")) {
-                break; // Exit the loop if the user enters 'N' or 'n'
+                break; // Exit the loop if the user chooses not to add another item
             }
         }
     }
@@ -153,8 +125,7 @@ public class Note {
                 System.out.println("Text: " + text); // Show the text content for TEXT type note
                 break;
             case LIST:
-                // Placeholder for future implementation of LIST type note viewing
-                System.out.println("Feature is not implemented yet"); // Inform that the feature is not yet available
+                viewList(id); // Delegate to viewList method for LIST type note
                 break;
             case TODO:
                 todo.viewTodo(); // Delegate to Todo object's viewTodo method for TODO type note
@@ -166,19 +137,16 @@ public class Note {
      * Displays the details and items of a list-type note identified by the given UUID.
      * The method outputs the note's title, type, and creation date, followed by each item in the list.
      * Assumes that the note is of the LIST type and that the 'list' array contains the items to display.
+     * Displays the index number and details of each item in the list.
      *
      * @param id UUID of the list-type note to be viewed. Note: the parameter is not currently used in the method.
      */
     public void viewList(UUID id) {
-        // Display the general properties of the list-type note
-        System.out.println(
-                "Title: " + title
-                        + "\nType: " + type
-                        + "\nDate: " + creationDate);
-
-        // Iterate over and display each item in the list
-        for (String item : list) {
-            System.out.println(item); // Print each list item on a new line
+        int index = 1; // Start indexing at 1 for user-friendly numbering
+        for (Todo todo : list) {
+            System.out.println("Item #" + index);
+            todo.viewListItem(); // Call viewListItem on each Todo object
+            index++; // Increment index for the next item
         }
     }
 
@@ -188,14 +156,14 @@ public class Note {
      * Invalid choices prompt the user to try again.
      */
     public void editNote() {
-        System.out.println("What do you want to edit?" +
-                "\n1. Title" +
-                "\n2. Type" +
-                "\n3. Exit" +
-                "\nEnter your choice: ");
+        System.out.println("""
+                What do you want to edit?
+                1. Title
+                2. Type
+                3. Exit
+                Enter your choice:\s""");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Clear the buffer to handle next line input
+        int choice = inputChecker.getIntegerChoice(); // Get the user's choice as an integer
 
         switch (choice) {
             case 1:
@@ -231,9 +199,7 @@ public class Note {
             System.out.println(optionNum + ". " + type);
             optionNum++;
         }
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character to prepare for the next input
+        int choice = inputChecker.getIntegerChoice(); // Get the user's choice as an integer
 
         try {
             if (choice < 1 || choice > NoteType.values().length) {

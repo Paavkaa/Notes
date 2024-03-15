@@ -1,11 +1,25 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class Menu {
-    private final Scanner scanner = new Scanner(System.in);
-    private final ArrayList<Note> notes = new ArrayList<>();
 
+/**
+ * The Menu class provides an interactive command-line interface for managing a collection of notes.
+ * It allows users to create new notes, select existing notes for viewing or editing, and delete notes.
+ * The class supports different types of notes including text and todo notes, each with their own specific menu.
+ */
+public class Menu {
+    private final Scanner scanner = new Scanner(System.in); // Scanner for reading user input
+    private final ArrayList<Note> notes = new ArrayList<>(); // List to store all notes
+    private final InputChecker inputChecker = new InputChecker(); // Helper for checking and getting valid input
+
+
+    /**
+     * Displays the main menu and handles user interaction.
+     * Users can choose to create a note, select an existing note, or exit the program.
+     * The menu is displayed in a loop until the user chooses to exit.
+     */
     public void MainMenu() {
         do {
 
@@ -17,9 +31,7 @@ public class Menu {
                     3. Exit the program
                     """);
 
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            int choice = inputChecker.getIntegerChoice();
 
             switch (choice) {
                 case 1:
@@ -27,9 +39,17 @@ public class Menu {
                     break;
                 case 2:
                     UUID id = selectNote(); // Select a note
+
                     if (id != null) {
-                        NoteMenu(id); // Open the note menu for selected note and it is checked by ID
+                        Note note = notes.stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
+                        if (note != null) {
+                            switch (note.getType()) {
+                                case TEXT -> textMenu(id);
+                                case LIST, TODO -> todoMenu(id);
+                            }
+                        }
                     }
+
                     break;
                 case 3:
                     scanner.close(); // Close the scanner before exiting
@@ -74,9 +94,18 @@ public class Menu {
             System.out.println((i + 1) + ". " + note.getTitle());
         }
 
-        System.out.print("Enter the index of the note you want to select: ");
-        int index = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        int index;
+
+        try {
+            index = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); // Consume the invalid input
+            return null; // Or ask again using a loop
+        } finally {
+            scanner.nextLine(); // Consume the newline character whether exception occurred or not
+        }
+
 
         if (index < 1 || index > notes.size()) {
             System.out.println("Invalid index. Please select a valid note index.");
@@ -90,7 +119,6 @@ public class Menu {
 
     /**
      * Edits the contents of a note identified by its UUID.
-     *
      * This method iterates through the list of notes to find the one matching the provided UUID.
      * If a note with the matching UUID is found, its 'editNote' method is called, allowing for the
      * modification of the note's content. If no note with the specified UUID exists, an error message
@@ -142,7 +170,6 @@ public class Menu {
 
     /**
      * Displays the note management menu and processes user actions for a specific note.
-     *
      * This method presents a menu with options to edit, view, delete a note, or return to the main menu.
      * It reads the user's choice and performs the corresponding action on the note identified by the UUID 'id'.
      * If the user chooses to delete the note or return to the main menu, the method exits after performing
@@ -150,7 +177,7 @@ public class Menu {
      *
      * @param id UUID of the note for which the menu actions will be applied
      */
-    public void NoteMenu(UUID id) {
+    public void textMenu(UUID id) {
         do {
 
             System.out.println(
@@ -161,9 +188,8 @@ public class Menu {
                     4. Return to main menu
                     """);
 
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+                int choice = inputChecker.getIntegerChoice();
+// Proceed with the rest of your code using the 'choice' variable
 
             switch (choice) {
                 case 1:
@@ -179,6 +205,66 @@ public class Menu {
                     return; // Return to main menu
                 default:
                     System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
+    }
+
+    /**
+     * Displays a menu specific to todo-type notes and handles user interactions.
+     * Users can choose to edit, view, mark as done, delete the selected todo note, or return to the main menu.
+     * The menu is displayed in a loop until the user chooses to return to the main menu.
+     *
+     * @param id UUID of the selected todo note for which the menu actions will be applied.
+     */
+    public void todoMenu(UUID id) {
+        do {
+            // Display the todo note menu options
+            System.out.println(
+                    """
+                    1. Edit note\s
+                    2. View note\s
+                    3. Mark as done\s
+                    4. Delete note\s
+                    5. Return to main menu
+                    """);
+
+            // Get the user's menu choice
+            int choice = inputChecker.getIntegerChoice();
+
+            // Handle the user's menu choice
+            switch (choice) {
+                case 1:
+                    editNote(id); // Edit the selected todo note
+                    break;
+                case 2:
+                    viewNote(id); // View the selected todo note
+                    break;
+                case 3:
+                    Note selectedNote = notes
+                            .stream()
+                            .filter(n -> n.getId().equals(id))
+                            .findFirst().orElse(null);
+
+                    if (selectedNote != null) {
+                        if (selectedNote.getType() == Note.NoteType.TODO) {
+                            selectedNote.todo.checked(); // Mark the selected todo note as done
+                        } else if (selectedNote.getType() == Note.NoteType.LIST) {
+                            selectedNote.viewList(id);
+
+                            System.out.println("Enter the item number to mark as done: ");
+                            int itemNumber = inputChecker.getIntegerChoice();
+                            selectedNote.list.get(itemNumber - 1).checked();
+                        }
+                    }
+                    break;
+                case 4:
+                    deleteNote(id); // Delete the selected todo note
+                    return; // Return to the main menu after deletion
+                case 5:
+                    return; // Return to the main menu
+                default:
+                    System.out.println("Invalid choice. Please try again."); // Handle invalid choices
                     break;
             }
         } while (true);
