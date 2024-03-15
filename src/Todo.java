@@ -108,8 +108,9 @@ public class Todo {
         // Display the Todo item details
         System.out.println(
                 "Deadline: " + deadline
-                        + "\nPriority: " + priority
-                        + "\nDescription: " + description);
+                + "\nPriority: " + priority
+                + "\nDescription: " + description
+                + "\nDone: " + (done ? "Yes" : "No"));
         checked(); // Prompt the user to mark the Todo item as done
     }
 
@@ -117,10 +118,12 @@ public class Todo {
      * Displays the description and completion status of a list item.
      * After presenting the details, it prompts the user to mark the item as done if desired.
      */
-    public void viewListItem(String item) {
+    public void viewListItem() {
         // Display the list item's description and completion status
-        System.out.println("Description: " + description);
-        checked(); // Prompt the user to mark the list item as done
+        System.out.println(
+                "Description: " + description
+                + "\nDone: " + (done ? "Yes" : "No"));
+        //checked(); // Prompt the user to mark the list item as done
     }
 
     /**
@@ -129,7 +132,6 @@ public class Todo {
      * If the user inputs 'y' or 'Y', the item's completion status is updated to true.
      */
     public void checked() {
-        System.out.println("Do you want to mark this todo as done? (y/N)");
         // Prompt the user to change the completion status to done
         System.out.println("Do you want to mark this item as done? (y/N)");
         String choice = scanner.nextLine();

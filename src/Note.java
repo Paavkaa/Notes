@@ -30,7 +30,7 @@ public class Note {
 
     // Properties for specific note types
     private String text;       // Content for TEXT note type
-    private ArrayList<String> list; // List to store items
+    private ArrayList<Todo> list; // List to store items
     public Todo todo;         // TODO object for TODO note type
 
 
@@ -39,8 +39,8 @@ public class Note {
      * Can be used to create a note object and set properties later.
      */
     public Note() {
-        // This constructor intentionally left blank.
-        // Fields can be set using setter methods or direct access.
+        this.list = new ArrayList<>(); // Initialize the ArrayList
+        this.todo = new Todo(); // Initialize the Todo object
     }
 
     /*Getters and setters for the fields*/
@@ -87,16 +87,16 @@ public class Note {
      * The loop terminates when the user indicates they do not want to add another item.
      */
     public void createList() {
-        if (this.todo == null) {
-            this.todo = new Todo();
-        }
-
         while (true) {
-            todo.createListItem(); // Call method to add a new item to the list
-            System.out.println("Do you want to add another item? (Y/n) ");
-            String choice = scanner.nextLine();
+            Todo listItem = new Todo(); // Create a new Todo object for the list item
+            listItem.createListItem(); // Prompt the user to create the list item
+            list.add(listItem); // Add the list item to the ArrayList
+
+            System.out.println("Do you want to add another item? (Y/n)");
+            String choice = scanner.nextLine(); // Prompt the user to continue or exit the loop
+
             if (choice.equalsIgnoreCase("n")) {
-                break; // Exit the loop if the user enters 'N' or 'n'
+                break; // Exit the loop if the user chooses not to add another item
             }
         }
     }
@@ -138,7 +138,9 @@ public class Note {
      * @param id UUID of the list-type note to be viewed. Note: the parameter is not currently used in the method.
      */
     public void viewList(UUID id) {
-
+        for (Todo todo : list) {
+            todo.viewListItem(); // Call viewListItem on each Todo object
+        }
     }
 
     /**
