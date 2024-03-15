@@ -52,6 +52,10 @@ public class Note {
         return id;
     }
 
+    public NoteType getType() {
+        return type;
+    }
+
     /**
      * Interactively creates a note by prompting the user for input.
      * It assigns a unique identifier, sets the title, note type, and content based on the note type.

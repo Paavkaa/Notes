@@ -27,9 +27,17 @@ public class Menu {
                     break;
                 case 2:
                     UUID id = selectNote(); // Select a note
+
                     if (id != null) {
-                        NoteMenu(id); // Open the note menu for selected note and it is checked by ID
+                        Note note = notes.stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
+                        if (note != null) {
+                            switch (note.getType()) {
+                                case TEXT -> textMenu(id);
+                                case LIST, TODO -> todoMenu(id);
+                            }
+                        }
                     }
+
                     break;
                 case 3:
                     scanner.close(); // Close the scanner before exiting
@@ -157,7 +165,7 @@ public class Menu {
      *
      * @param id UUID of the note for which the menu actions will be applied
      */
-    public void NoteMenu(UUID id) {
+    public void textMenu(UUID id) {
         do {
 
             System.out.println(
@@ -182,6 +190,42 @@ public class Menu {
                     deleteNote(id);
                     return; // Return to main menu after deletion
                 case 4:
+                    return; // Return to main menu
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
+    }
+
+    public void todoMenu(UUID id) {
+        do {
+
+            System.out.println(
+                    """
+                    1. Edit note\s
+                    2. View note\s
+                    3. Mark as done\s
+                    4. Delete note\s
+                    5. Return to main menu
+                    """);
+
+            int choice = inputChecker.getIntegerChoice();
+// Proceed with the rest of your code using the 'choice' variable
+
+            switch (choice) {
+                case 1:
+                    editNote(id);
+                    break;
+                case 2:
+                    viewNote(id);
+                    break;
+                case 3:
+
+                case 4:
+                    deleteNote(id);
+                    return; // Return to main menu
+                case 5:
                     return; // Return to main menu
                 default:
                     System.out.println("Invalid choice. Please try again.");
