@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/mydatabase</property>
+        <property name="hibernate.connection.username">user</property>
+        <property name="hibernate.connection.password">pass</property>
+
+        <!-- SQL dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- Specify cache provider -->
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.internal.StandardQueryCacheFactory</property>
+
+        <!-- Enable second-level cache -->
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+
+        <!-- Specify cache region factory -->
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.jcache.JCacheRegionFactory</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+
+        <!-- List of XML mapping files -->
+        <mapping resource="com/myapp/model/MyEntity.hbm.xml"/>
+
+        <!-- List of annotated classes -->
+        <mapping class="com.myapp.model.MyEntity"/>
+    </session-factory>
+</hibernate-configuration>
